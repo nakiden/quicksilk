@@ -1,0 +1,47 @@
+<div id="pagination_controls">
+    <script>
+        //redirect to another page
+        function changePage(page){
+            document.location.href = 'http://test1.ru/display/' + page;
+        }
+        //set page number to next or the first if current page is the last
+        function forwardPage(){
+            if(currentPage >= pageCount) document.location.href = 'http://test1.ru/display/' + 1;
+            if(currentPage < pageCount) document.location.href = 'http://test1.ru/display/' + (++currentPage);
+        }
+        // set page number to previous or the last if current page is the first
+        function backwardPage(){
+            if(currentPage <= pageCount) document.location.href = 'http://test1.ru/display/' + (currentPage - 1);
+            if(currentPage == 1) document.location.href = 'http://test1.ru/display/' +  pageCount;
+        }
+
+        var Connect = new XMLHttpRequest();
+
+        // Define which file to open and
+        // send the request.
+        Connect.open("GET", "/data/books.xml", false);
+        Connect.setRequestHeader("Content-Type", "text/xml");
+        Connect.send(null);
+
+        // Place the response in an XML document.
+        var xmlDoc = Connect.responseXML;
+        //xmlDoc = xml.responseXML;
+        var length = xmlDoc.getElementsByTagName("book").length;
+        var currentPage = document.getElementById('currentPage').innerHTML;
+        // calculating general number of pages
+        var pageCount = Math.ceil(length / 5) ;
+
+        // render paginator buttons
+        if(length > 0) {
+            document.write("<button id='page_button' onclick='backwardPage()' ><<</button>");
+            for (var i = 0; i < (pageCount); i++) {
+                if ((i + 1 ) == currentPage) {
+                    document.write("<button id='page_button_current' onclick='changePage(" + (i + 1) + ")' >" + (i + 1) + "</button>");
+                }else{
+                    document.write("<button id='page_button' onclick='changePage(" + (i + 1) + ")' >" + (i + 1) + "</button>");
+                }
+            }
+            document.write("<button id='page_button' onclick='forwardPage()' >>></button>");
+        }
+    </script>
+</div>
